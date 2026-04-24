@@ -1,0 +1,308 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+@layer base {
+  @font-face {
+    font-family: 'PP Neue Montreal';
+    src: url('https://cdn.jsdelivr.net/gh/nicholasgasior/gfonts-pp-neue-montreal@master/fonts/PPNeueMontreal-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'PP Neue Montreal';
+    src: url('https://cdn.jsdelivr.net/gh/nicholasgasior/gfonts-pp-neue-montreal@master/fonts/PPNeueMontreal-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.625rem;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    font-family: 'DM Sans', 'PP Neue Montreal', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #FFFFFF;
+    color: #0a0a0a;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Cormorant Garamond', 'PP Neue Montreal', Georgia, serif;
+  }
+
+  * {
+    cursor: none;
+  }
+
+  ::selection {
+    background-color: #000000;
+    color: #FFFFFF;
+  }
+}
+
+@layer components {
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .hero-word {
+    display: inline-block;
+    opacity: 0;
+    filter: blur(10px);
+  }
+
+  .magnetic-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2.5rem;
+    border-radius: 999px;
+    border: 1px solid #000000;
+    background: transparent;
+    color: #000000;
+    font-family: 'PP Neue Montreal', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    will-change: transform;
+  }
+
+  .magnetic-btn:hover {
+    background-color: #000000;
+    color: #FFFFFF;
+  }
+
+  .glass-panel {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+
+  .glass-panel-light {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     LIQUID GLASS NAVBAR
+     Layered approach — each div handles one optical property
+     of real water/glass:
+       lg-backdrop  → the frosted glass body (blur + tint)
+       lg-inner-glow → soft internal light scatter
+       lg-specular  → the bright top-edge highlight streak
+       lg-rim       → the iridescent border (light bending at edge)
+     ═══════════════════════════════════════════════════════════ */
+
+  .lg-pill {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.45rem 0.6rem;
+    border-radius: 999px;
+    isolation: isolate;
+    /* Prevent content from clipping the glass layers */
+    overflow: visible;
+  }
+
+  /* ── Layer 1: The glass body ──────────────────────────────── */
+  /* Deep blur + slight cool tint = water clarity */
+  .lg-backdrop {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(40px) saturate(180%) brightness(1.05);
+    -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(1.05);
+    z-index: -4;
+  }
+
+  /* ── Layer 2: Internal light scatter ─────────────────────── */
+  /* Real glass scatters light internally — this is that soft glow */
+  .lg-inner-glow {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: radial-gradient(
+      ellipse 80% 60% at 50% 0%,
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(255, 255, 255, 0.04) 60%,
+      transparent 100%
+    );
+    z-index: -3;
+    pointer-events: none;
+  }
+
+  /* ── Layer 3: Top specular streak ────────────────────────── */
+  /* The bright line you see on the top edge of a glass object */
+  .lg-specular {
+    position: absolute;
+    top: 1px;
+    left: 12%;
+    right: 12%;
+    height: 38%;
+    border-radius: 999px;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.82) 0%,
+      rgba(255, 255, 255, 0.28) 50%,
+      rgba(255, 255, 255, 0.00) 100%
+    );
+    filter: blur(0.8px);
+    z-index: -2;
+    pointer-events: none;
+    animation: specular-breathe 5s ease-in-out infinite;
+  }
+
+  @keyframes specular-breathe {
+    0%, 100% { opacity: 0.9; transform: scaleX(1); }
+    50%       { opacity: 1.0; transform: scaleX(1.03); }
+  }
+
+  /* ── Layer 4: Iridescent rim ─────────────────────────────── */
+  /*
+   * This is the key water effect: when light hits water/glass at
+   * a glancing angle, it splits into a faint spectrum.
+   * We simulate this with a conic gradient that only shows as a
+   * thin border ring (mask trick), with a slow hue drift.
+   */
+  .lg-rim {
+    position: absolute;
+    inset: -1px;
+    border-radius: 999px;
+    padding: 1px;
+    background: conic-gradient(
+      from 220deg at 50% 50%,
+      rgba(255, 255, 255, 0.90)  0deg,
+      rgba(200, 230, 255, 0.70)  60deg,
+      rgba(180, 200, 255, 0.50) 120deg,
+      rgba(220, 240, 255, 0.80) 180deg,
+      rgba(255, 255, 255, 0.90) 240deg,
+      rgba(210, 235, 255, 0.65) 300deg,
+      rgba(255, 255, 255, 0.90) 360deg
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    z-index: -1;
+    pointer-events: none;
+    animation: rim-drift 8s linear infinite;
+    /* Subtle outer glow to sell the glass depth */
+    box-shadow:
+      0 2px 24px rgba(180, 210, 255, 0.15),
+      0 8px 32px rgba(0, 0, 0, 0.10);
+  }
+
+  @keyframes rim-drift {
+    0%   { filter: hue-rotate(0deg)  brightness(1.00); }
+    33%  { filter: hue-rotate(15deg) brightness(1.08); }
+    66%  { filter: hue-rotate(-8deg) brightness(0.96); }
+    100% { filter: hue-rotate(0deg)  brightness(1.00); }
+  }
+
+  /* ── Nav content styles ───────────────────────────────────── */
+
+  .lg-logo-wrap {
+    display: flex;
+    align-items: center;
+    margin-right: 0.5rem;
+    padding-right: 0.85rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .lg-logo-text {
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, 0.80);
+    font-family: inherit;
+  }
+
+  .lg-links {
+    display: flex;
+    align-items: center;
+    gap: 0.1rem;
+  }
+
+  .lg-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.42rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.80rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: rgba(0, 0, 0, 0.58);
+    text-decoration: none;
+    transition: color 0.2s, background 0.2s;
+    cursor: none;
+    font-family: inherit;
+  }
+
+  .lg-link:hover,
+  .lg-link--active {
+    color: rgba(0, 0, 0, 0.88);
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  .lg-cta-wrap {
+    margin-left: 0.5rem;
+    padding-left: 0.85rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .lg-cta-btn {
+    padding: 0.42rem 1.05rem;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 0, 0, 0.18);
+    background: rgba(0, 0, 0, 0.82);
+    color: #fff;
+    font-size: 0.78rem;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    cursor: none;
+    font-family: inherit;
+    transition: background 0.2s;
+  }
+
+  .lg-cta-btn:hover {
+    background: rgba(0, 0, 0, 0.95);
+  }
+}
