@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import LoopingMarquee from '@/components/LoopingMarquee';
@@ -8,6 +9,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function FooterSection() {
   const contentRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const content = contentRef.current;
@@ -29,6 +31,18 @@ export default function FooterSection() {
       }
     );
   }, []);
+
+  const navLinks = [
+    { label: 'Home', action: () => navigate('/') },
+    { label: 'Capabilities', action: () => navigate('/capabilities') },
+    { label: 'Philosophy', action: () => navigate('/philosophy') },
+    { label: 'Contact', action: () => navigate('/contact') },
+  ];
+
+  const socialLinks = [
+    { label: 'GitHub', href: 'https://github.com/Momin010' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/momin-aldahdouh-49ab87380/' },
+  ];
 
   return (
     <section
@@ -61,7 +75,7 @@ export default function FooterSection() {
             fontWeight: 300,
             letterSpacing: '-0.03em',
             color: '#FFFFFF',
-            lineHeight: 0.95,
+            lineHeight: 1.15,
             marginBottom: '2.5rem',
             fontFamily: "'Cormorant Garamond', Georgia, serif",
           }}
@@ -115,10 +129,11 @@ export default function FooterSection() {
             >
               Navigation
             </span>
-            {['Home', 'About', 'Careers', 'Contact'].map((item) => (
+            {navLinks.map((item) => (
               <a
-                key={item}
+                key={item.label}
                 href="#"
+                onClick={(e) => { e.preventDefault(); item.action(); }}
                 style={{
                   display: 'block',
                   color: 'rgba(255,255,255,0.6)',
@@ -127,14 +142,10 @@ export default function FooterSection() {
                   marginBottom: '0.5rem',
                   transition: 'color 0.2s',
                 }}
-                onMouseEnter={(e) => {
-                  (e.target as HTMLElement).style.color = '#FFFFFF';
-                }}
-                onMouseLeave={(e) => {
-                  (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.6)';
-                }}
+                onMouseEnter={(e) => { (e.target as HTMLElement).style.color = '#FFFFFF'; }}
+                onMouseLeave={(e) => { (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.6)'; }}
               >
-                {item}
+                {item.label}
               </a>
             ))}
           </div>
@@ -152,10 +163,12 @@ export default function FooterSection() {
             >
               Social
             </span>
-            {['GitHub', 'Twitter', 'LinkedIn'].map((item) => (
+            {socialLinks.map((item) => (
               <a
-                key={item}
-                href="#"
+                key={item.label}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
                   display: 'block',
                   color: 'rgba(255,255,255,0.6)',
@@ -164,51 +177,10 @@ export default function FooterSection() {
                   marginBottom: '0.5rem',
                   transition: 'color 0.2s',
                 }}
-                onMouseEnter={(e) => {
-                  (e.target as HTMLElement).style.color = '#FFFFFF';
-                }}
-                onMouseLeave={(e) => {
-                  (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.6)';
-                }}
+                onMouseEnter={(e) => { (e.target as HTMLElement).style.color = '#FFFFFF'; }}
+                onMouseLeave={(e) => { (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.6)'; }}
               >
-                {item}
-              </a>
-            ))}
-          </div>
-          <div style={{ textAlign: 'left' }}>
-            <span
-              className="font-mono"
-              style={{
-                fontSize: '0.7rem',
-                color: 'rgba(255,255,255,0.4)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-                display: 'block',
-                marginBottom: '1rem',
-              }}
-            >
-              Legal
-            </span>
-            {['Privacy', 'Terms', 'Cookies'].map((item) => (
-              <a
-                key={item}
-                href="#"
-                style={{
-                  display: 'block',
-                  color: 'rgba(255,255,255,0.6)',
-                  textDecoration: 'none',
-                  fontSize: '0.9rem',
-                  marginBottom: '0.5rem',
-                  transition: 'color 0.2s',
-                }}
-                onMouseEnter={(e) => {
-                  (e.target as HTMLElement).style.color = '#FFFFFF';
-                }}
-                onMouseLeave={(e) => {
-                  (e.target as HTMLElement).style.color = 'rgba(255,255,255,0.6)';
-                }}
-              >
-                {item}
+                {item.label}
               </a>
             ))}
           </div>

@@ -53,7 +53,6 @@
     background-color: #FFFFFF;
     color: #0a0a0a;
     overflow-x: hidden;
-    cursor: none;
   }
 
   h1, h2, h3 {
@@ -61,7 +60,7 @@
   }
 
   * {
-    cursor: none;
+    /* cursor: none removed — show real cursor */
   }
 
   ::selection {
@@ -118,13 +117,13 @@
 
   /* ═══════════════════════════════════════════════════════════
      LIQUID GLASS NAVBAR
-     Layered approach — each div handles one optical property
-     of real water/glass:
-       lg-backdrop  → the frosted glass body (blur + tint)
-       lg-inner-glow → soft internal light scatter
-       lg-specular  → the bright top-edge highlight streak
-       lg-rim       → the iridescent border (light bending at edge)
+     Adaptive design — switches between light/dark modes based
+     on background section color
      ═══════════════════════════════════════════════════════════ */
+
+  .lg-nav {
+    transition: all 0.4s ease;
+  }
 
   .lg-pill {
     position: relative;
@@ -134,12 +133,10 @@
     padding: 0.45rem 0.6rem;
     border-radius: 999px;
     isolation: isolate;
-    /* Prevent content from clipping the glass layers */
     overflow: visible;
   }
 
-  /* ── Layer 1: The glass body ──────────────────────────────── */
-  /* Deep blur + slight cool tint = water clarity */
+  /* ── Layer 1: Glass backdrop (light mode default) ─────────── */
   .lg-backdrop {
     position: absolute;
     inset: 0;
@@ -148,10 +145,17 @@
     backdrop-filter: blur(40px) saturate(180%) brightness(1.05);
     -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(1.05);
     z-index: -4;
+    transition: background 0.4s ease;
   }
 
-  /* ── Layer 2: Internal light scatter ─────────────────────── */
-  /* Real glass scatters light internally — this is that soft glow */
+  /* Dark mode: darker glass with more transparency */
+  .lg-nav--dark .lg-backdrop {
+    background: rgba(20, 20, 20, 0.35);
+    backdrop-filter: blur(40px) saturate(160%) brightness(0.95);
+    -webkit-backdrop-filter: blur(40px) saturate(160%) brightness(0.95);
+  }
+
+  /* ── Layer 2: Internal light scatter ──────────────────────── */
   .lg-inner-glow {
     position: absolute;
     inset: 0;
@@ -164,10 +168,19 @@
     );
     z-index: -3;
     pointer-events: none;
+    transition: background 0.4s ease;
   }
 
-  /* ── Layer 3: Top specular streak ────────────────────────── */
-  /* The bright line you see on the top edge of a glass object */
+  .lg-nav--dark .lg-inner-glow {
+    background: radial-gradient(
+      ellipse 80% 60% at 50% 0%,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.02) 60%,
+      transparent 100%
+    );
+  }
+
+  /* ── Layer 3: Top specular highlight ──────────────────────── */
   .lg-specular {
     position: absolute;
     top: 1px;
@@ -185,6 +198,16 @@
     z-index: -2;
     pointer-events: none;
     animation: specular-breathe 5s ease-in-out infinite;
+    transition: background 0.4s ease;
+  }
+
+  .lg-nav--dark .lg-specular {
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(255, 255, 255, 0.05) 50%,
+      rgba(255, 255, 255, 0.00) 100%
+    );
   }
 
   @keyframes specular-breathe {
@@ -192,13 +215,7 @@
     50%       { opacity: 1.0; transform: scaleX(1.03); }
   }
 
-  /* ── Layer 4: Iridescent rim ─────────────────────────────── */
-  /*
-   * This is the key water effect: when light hits water/glass at
-   * a glancing angle, it splits into a faint spectrum.
-   * We simulate this with a conic gradient that only shows as a
-   * thin border ring (mask trick), with a slow hue drift.
-   */
+  /* ── Layer 4: Iridescent rim ──────────────────────────────── */
   .lg-rim {
     position: absolute;
     inset: -1px;
@@ -222,10 +239,26 @@
     z-index: -1;
     pointer-events: none;
     animation: rim-drift 8s linear infinite;
-    /* Subtle outer glow to sell the glass depth */
     box-shadow:
       0 2px 24px rgba(180, 210, 255, 0.15),
       0 8px 32px rgba(0, 0, 0, 0.10);
+    transition: background 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  .lg-nav--dark .lg-rim {
+    background: conic-gradient(
+      from 220deg at 50% 50%,
+      rgba(255, 255, 255, 0.40)  0deg,
+      rgba(200, 230, 255, 0.30)  60deg,
+      rgba(180, 200, 255, 0.25) 120deg,
+      rgba(220, 240, 255, 0.35) 180deg,
+      rgba(255, 255, 255, 0.40) 240deg,
+      rgba(210, 235, 255, 0.28) 300deg,
+      rgba(255, 255, 255, 0.40) 360deg
+    );
+    box-shadow:
+      0 2px 24px rgba(100, 150, 200, 0.08),
+      0 8px 32px rgba(0, 0, 0, 0.30);
   }
 
   @keyframes rim-drift {
@@ -243,6 +276,11 @@
     margin-right: 0.5rem;
     padding-right: 0.85rem;
     border-right: 1px solid rgba(255, 255, 255, 0.25);
+    transition: border-color 0.4s ease;
+  }
+
+  .lg-nav--dark .lg-logo-wrap {
+    border-right-color: rgba(255, 255, 255, 0.15);
   }
 
   .lg-logo-text {
@@ -252,6 +290,11 @@
     text-transform: uppercase;
     color: rgba(0, 0, 0, 0.80);
     font-family: inherit;
+    transition: color 0.4s ease;
+  }
+
+  .lg-nav--dark .lg-logo-text {
+    color: rgba(255, 255, 255, 0.90);
   }
 
   .lg-links {
@@ -271,9 +314,12 @@
     letter-spacing: 0.02em;
     color: rgba(0, 0, 0, 0.58);
     text-decoration: none;
-    transition: color 0.2s, background 0.2s;
-    cursor: none;
+    transition: color 0.3s, background 0.3s;
     font-family: inherit;
+  }
+
+  .lg-nav--dark .lg-link {
+    color: rgba(255, 255, 255, 0.65);
   }
 
   .lg-link:hover,
@@ -282,10 +328,21 @@
     background: rgba(255, 255, 255, 0.35);
   }
 
+  .lg-nav--dark .lg-link:hover,
+  .lg-nav--dark .lg-link--active {
+    color: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.12);
+  }
+
   .lg-cta-wrap {
     margin-left: 0.5rem;
     padding-left: 0.85rem;
     border-left: 1px solid rgba(255, 255, 255, 0.25);
+    transition: border-color 0.4s ease;
+  }
+
+  .lg-nav--dark .lg-cta-wrap {
+    border-left-color: rgba(255, 255, 255, 0.15);
   }
 
   .lg-cta-btn {
@@ -297,12 +354,21 @@
     font-size: 0.78rem;
     font-weight: 400;
     letter-spacing: 0.03em;
-    cursor: none;
     font-family: inherit;
-    transition: background 0.2s;
+    transition: background 0.3s, border-color 0.3s;
   }
 
   .lg-cta-btn:hover {
     background: rgba(0, 0, 0, 0.95);
+  }
+
+  .lg-nav--dark .lg-cta-btn {
+    border-color: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+  }
+
+  .lg-nav--dark .lg-cta-btn:hover {
+    background: rgba(255, 255, 255, 0.28);
   }
 }
