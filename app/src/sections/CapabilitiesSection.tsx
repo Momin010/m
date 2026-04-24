@@ -59,7 +59,7 @@ export default function CapabilitiesSection() {
     const st = ScrollTrigger.create({
       trigger: wrapper,
       start: 'top top',
-      end: () => `+=${(panels.length - 1) * 150}vh`,
+      end: () => `+=${(numPanels - 1) * window.innerWidth}`,
       pin: true,
       pinSpacing: false,
       scrub: 1,
@@ -74,7 +74,7 @@ export default function CapabilitiesSection() {
   }, []);
 
   return (
-    <div ref={wrapperRef} className="horizontal-wrapper" style={{ height: `${panels.length * 150}vh` }}>
+    <div ref={wrapperRef} className="horizontal-wrapper" style={{ height: `${panels.length * 100}vh` }}>
       <div
         ref={containerRef}
         className="parallax-container"
