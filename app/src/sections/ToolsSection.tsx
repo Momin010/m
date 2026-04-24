@@ -226,7 +226,7 @@ export default function ToolsSection() {
             gap: '0.75rem',
           }}
         >
-          {cat.tools.map((tool, i) => (
+          {cat.tools.map((tool) => (
             <div
               key={tool}
               style={{

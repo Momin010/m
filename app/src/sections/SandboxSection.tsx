@@ -18,13 +18,8 @@ export default function SandboxSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [activeAgent, setActiveAgent] = useState<string | null>(null);
-  const [tick, setTick] = useState(0);
 
-  // Tick for live-feel updates
-  useEffect(() => {
-    const interval = setInterval(() => setTick((t) => t + 1), 2000);
-    return () => clearInterval(interval);
-  }, []);
+  // intentional: no tick needed
 
   // 3D sandbox visualization
   useEffect(() => {

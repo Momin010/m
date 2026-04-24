@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Routes, Route, useLocation } from 'react-router';
+import { Routes, Route } from 'react-router';
 import { useLenis } from '@/hooks/useLenis';
 import { useVoxelScene } from '@/hooks/useVoxelScene';
 import CustomCursor from '@/components/CustomCursor';
