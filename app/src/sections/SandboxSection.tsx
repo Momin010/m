@@ -182,22 +182,20 @@ export default function SandboxSection() {
     const section = sectionRef.current;
     if (!section) return;
 
-    const heading = section.querySelector('.sandbox-heading');
-    if (heading) {
-      gsap.fromTo(heading,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1, y: 0, duration: 1.1, ease: 'power3.out',
-          scrollTrigger: { trigger: heading, start: 'top 80%' },
-        }
-      );
-    }
+    const ctx = gsap.context(() => {
+      const heading = section.querySelector('.sandbox-heading');
+      if (heading) {
+        gsap.fromTo(heading,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1, y: 0, duration: 1.1, ease: 'power3.out',
+            scrollTrigger: { trigger: heading, start: 'top 80%' },
+          }
+        );
+      }
+    }, sectionRef);
 
-    return () => {
-      ScrollTrigger.getAll().forEach((t) => {
-        if (t.vars.trigger && section.contains(t.vars.trigger as Element)) t.kill();
-      });
-    };
+    return () => ctx.revert();
   }, []);
 
   const statusColor = (status: string) => {

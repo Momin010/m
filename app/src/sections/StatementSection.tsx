@@ -13,29 +13,29 @@ export default function StatementSection() {
     const lines = linesRef.current;
     if (!section || lines.length === 0) return;
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: section,
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: 1,
-        pin: false,
-      },
-    });
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 1,
+          pin: false,
+        },
+      });
 
-    lines.forEach((line, i) => {
-      const fromX = i % 2 === 0 ? '-100vw' : '100vw';
-      tl.fromTo(
-        line,
-        { x: fromX, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.3, ease: 'power2.out' },
-        i * 0.2
-      );
-    });
+      lines.forEach((line, i) => {
+        const fromX = i % 2 === 0 ? '-100vw' : '100vw';
+        tl.fromTo(
+          line,
+          { x: fromX, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.3, ease: 'power2.out' },
+          i * 0.2
+        );
+      });
+    }, sectionRef);
 
-    return () => {
-      tl.kill();
-    };
+    return () => ctx.revert();
   }, []);
 
   const lines = [

@@ -40,32 +40,30 @@ export default function FoundersSection() {
     const section = sectionRef.current;
     if (!section) return;
 
-    const heading = section.querySelector('.founders-h');
-    const cards = section.querySelectorAll('.founder-c');
+    const ctx = gsap.context(() => {
+      const heading = section.querySelector('.founders-h');
+      const cards = section.querySelectorAll('.founder-c');
 
-    if (heading) {
-      gsap.fromTo(heading,
-        { opacity: 0, y: 50 },
+      if (heading) {
+        gsap.fromTo(heading,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1, y: 0, duration: 1.1, ease: 'power3.out',
+            scrollTrigger: { trigger: heading, start: 'top 80%' },
+          }
+        );
+      }
+
+      gsap.fromTo(cards,
+        { opacity: 0, y: 60 },
         {
-          opacity: 1, y: 0, duration: 1.1, ease: 'power3.out',
-          scrollTrigger: { trigger: heading, start: 'top 80%' },
+          opacity: 1, y: 0, duration: 0.9, stagger: 0.15, ease: 'power3.out',
+          scrollTrigger: { trigger: cards[0], start: 'top 85%' },
         }
       );
-    }
+    }, sectionRef);
 
-    gsap.fromTo(cards,
-      { opacity: 0, y: 60 },
-      {
-        opacity: 1, y: 0, duration: 0.9, stagger: 0.15, ease: 'power3.out',
-        scrollTrigger: { trigger: cards[0], start: 'top 85%' },
-      }
-    );
-
-    return () => {
-      ScrollTrigger.getAll().forEach((t) => {
-        if (t.vars.trigger && section.contains(t.vars.trigger as Element)) t.kill();
-      });
-    };
+    return () => ctx.revert();
   }, []);
 
   return (

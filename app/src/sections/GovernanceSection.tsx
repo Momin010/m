@@ -52,42 +52,40 @@ export default function GovernanceSection() {
     const section = sectionRef.current;
     if (!section) return;
 
-    const heading = section.querySelector('.gov-heading');
-    if (heading) {
-      gsap.fromTo(heading,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1, y: 0, duration: 1.1, ease: 'power3.out',
-          scrollTrigger: { trigger: heading, start: 'top 80%' },
-        }
-      );
-    }
-
-    const cards = section.querySelectorAll('.law-card');
-    gsap.fromTo(cards,
-      { opacity: 0, y: 40 },
-      {
-        opacity: 1, y: 0, duration: 0.7, stagger: 0.1, ease: 'power3.out',
-        scrollTrigger: { trigger: cards[0], start: 'top 85%' },
+    const ctx = gsap.context(() => {
+      const heading = section.querySelector('.gov-heading');
+      if (heading) {
+        gsap.fromTo(heading,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1, y: 0, duration: 1.1, ease: 'power3.out',
+            scrollTrigger: { trigger: heading, start: 'top 80%' },
+          }
+        );
       }
-    );
 
-    // Animate the vertical line
-    if (lineRef.current) {
-      gsap.fromTo(lineRef.current,
-        { scaleY: 0, transformOrigin: 'top' },
+      const cards = section.querySelectorAll('.law-card');
+      gsap.fromTo(cards,
+        { opacity: 0, y: 40 },
         {
-          scaleY: 1, duration: 1.5, ease: 'power3.out',
-          scrollTrigger: { trigger: lineRef.current, start: 'top 80%' },
+          opacity: 1, y: 0, duration: 0.7, stagger: 0.1, ease: 'power3.out',
+          scrollTrigger: { trigger: cards[0], start: 'top 85%' },
         }
       );
-    }
 
-    return () => {
-      ScrollTrigger.getAll().forEach((t) => {
-        if (t.vars.trigger && section.contains(t.vars.trigger as Element)) t.kill();
-      });
-    };
+      // Animate the vertical line
+      if (lineRef.current) {
+        gsap.fromTo(lineRef.current,
+          { scaleY: 0, transformOrigin: 'top' },
+          {
+            scaleY: 1, duration: 1.5, ease: 'power3.out',
+            scrollTrigger: { trigger: lineRef.current, start: 'top 80%' },
+          }
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (

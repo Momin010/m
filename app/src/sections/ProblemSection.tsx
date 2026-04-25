@@ -19,38 +19,38 @@ export default function ProblemSection() {
     const section = sectionRef.current;
     if (!section) return;
 
-    // Lines slide in from alternating sides — same feel as StatementSection
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: section,
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: 1,
-      },
-    });
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 1,
+        },
+      });
 
-    linesRef.current.forEach((line, i) => {
-      if (!line) return;
-      const fromX = i % 2 === 0 ? '-100vw' : '100vw';
-      tl.fromTo(
-        line,
-        { x: fromX, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.3, ease: 'power2.out' },
-        i * 0.25
-      );
-    });
+      linesRef.current.forEach((line, i) => {
+        if (!line) return;
+        const fromX = i % 2 === 0 ? '-100vw' : '100vw';
+        tl.fromTo(
+          line,
+          { x: fromX, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.3, ease: 'power2.out' },
+          i * 0.25
+        );
+      });
 
-    // Sub-text fades in after lines
-    if (subRef.current) {
-      tl.fromTo(
-        subRef.current,
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' },
-        0.9
-      );
-    }
+      if (subRef.current) {
+        tl.fromTo(
+          subRef.current,
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' },
+          0.9
+        );
+      }
+    }, sectionRef);
 
-    return () => { tl.kill(); };
+    return () => ctx.revert();
   }, []);
 
   return (

@@ -16,32 +16,30 @@ export default function DemoSection() {
     const wrap = wrapRef.current;
     if (!section || !wrap) return;
 
-    // Heading reveal
-    const heading = section.querySelector('.demo-heading');
-    if (heading) {
-      gsap.fromTo(heading,
-        { opacity: 0, y: 50 },
+    const ctx = gsap.context(() => {
+      // Heading reveal
+      const heading = section.querySelector('.demo-heading');
+      if (heading) {
+        gsap.fromTo(heading,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1, y: 0, duration: 1.1, ease: 'power3.out',
+            scrollTrigger: { trigger: heading, start: 'top 80%' },
+          }
+        );
+      }
+
+      // Video frame scales up on scroll into view
+      gsap.fromTo(wrap,
+        { opacity: 0, scale: 0.92, y: 60 },
         {
-          opacity: 1, y: 0, duration: 1.1, ease: 'power3.out',
-          scrollTrigger: { trigger: heading, start: 'top 80%' },
+          opacity: 1, scale: 1, y: 0, duration: 1.2, ease: 'power3.out',
+          scrollTrigger: { trigger: wrap, start: 'top 80%' },
         }
       );
-    }
+    }, sectionRef);
 
-    // Video frame scales up on scroll into view
-    gsap.fromTo(wrap,
-      { opacity: 0, scale: 0.92, y: 60 },
-      {
-        opacity: 1, scale: 1, y: 0, duration: 1.2, ease: 'power3.out',
-        scrollTrigger: { trigger: wrap, start: 'top 80%' },
-      }
-    );
-
-    return () => {
-      ScrollTrigger.getAll().forEach((t) => {
-        if (t.vars.trigger && section.contains(t.vars.trigger as Element)) t.kill();
-      });
-    };
+    return () => ctx.revert();
   }, []);
 
   const togglePlay = () => {

@@ -36,28 +36,28 @@ export default function PhilosophyPage() {
     window.scrollTo(0, 0);
 
     const hero = heroRef.current;
-    if (hero) {
-      const els = hero.querySelectorAll('.phil-hero-el');
-      gsap.fromTo(els,
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 1, stagger: 0.12, ease: 'power3.out', delay: 0.2 }
-      );
-    }
+    const ctx = gsap.context(() => {
+      if (hero) {
+        const els = hero.querySelectorAll('.phil-hero-el');
+        gsap.fromTo(els,
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 1, stagger: 0.12, ease: 'power3.out', delay: 0.2 }
+        );
+      }
 
-    const cards = principlesRef.current?.querySelectorAll('.principle-card');
-    if (cards) {
-      gsap.fromTo(cards,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1, y: 0, duration: 0.8, stagger: 0.12, ease: 'power3.out',
-          scrollTrigger: { trigger: principlesRef.current, start: 'top 75%' },
-        }
-      );
-    }
+      const cards = principlesRef.current?.querySelectorAll('.principle-card');
+      if (cards) {
+        gsap.fromTo(cards,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1, y: 0, duration: 0.8, stagger: 0.12, ease: 'power3.out',
+            scrollTrigger: { trigger: principlesRef.current, start: 'top 75%' },
+          }
+        );
+      }
+    });
 
-    return () => {
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-    };
+    return () => ctx.revert();
   }, []);
 
   return (

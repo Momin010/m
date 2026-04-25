@@ -86,31 +86,29 @@ export default function ToolsSection() {
     const section = sectionRef.current;
     if (!section) return;
 
-    const heading = section.querySelector('.tools-heading');
-    if (heading) {
-      gsap.fromTo(heading,
-        { opacity: 0, y: 50 },
+    const ctx = gsap.context(() => {
+      const heading = section.querySelector('.tools-heading');
+      if (heading) {
+        gsap.fromTo(heading,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1, y: 0, duration: 1.1, ease: 'power3.out',
+            scrollTrigger: { trigger: heading, start: 'top 80%' },
+          }
+        );
+      }
+
+      const cats = section.querySelectorAll('.tool-cat-btn');
+      gsap.fromTo(cats,
+        { opacity: 0, y: 20 },
         {
-          opacity: 1, y: 0, duration: 1.1, ease: 'power3.out',
-          scrollTrigger: { trigger: heading, start: 'top 80%' },
+          opacity: 1, y: 0, duration: 0.6, stagger: 0.05, ease: 'power3.out',
+          scrollTrigger: { trigger: cats[0], start: 'top 85%' },
         }
       );
-    }
+    }, sectionRef);
 
-    const cats = section.querySelectorAll('.tool-cat-btn');
-    gsap.fromTo(cats,
-      { opacity: 0, y: 20 },
-      {
-        opacity: 1, y: 0, duration: 0.6, stagger: 0.05, ease: 'power3.out',
-        scrollTrigger: { trigger: cats[0], start: 'top 85%' },
-      }
-    );
-
-    return () => {
-      ScrollTrigger.getAll().forEach((t) => {
-        if (t.vars.trigger && section.contains(t.vars.trigger as Element)) t.kill();
-      });
-    };
+    return () => ctx.revert();
   }, []);
 
   const cat = toolCategories[activeCategory];
@@ -194,7 +192,6 @@ export default function ToolsSection() {
                 color: activeCategory === i ? c.color : 'rgba(0,0,0,0.55)',
                 fontSize: '0.82rem',
                 fontWeight: 400,
-                cursor: 'none',
                 transition: 'all 0.2s ease',
                 display: 'flex',
                 alignItems: 'center',
@@ -234,7 +231,6 @@ export default function ToolsSection() {
                 borderRadius: '8px',
                 border: `1px solid ${hoveredTool === tool ? cat.color : 'rgba(0,0,0,0.1)'}`,
                 background: hoveredTool === tool ? `${cat.color}08` : 'rgba(255,255,255,0.7)',
-                cursor: 'none',
                 transition: 'all 0.2s ease',
                 transform: hoveredTool === tool ? 'translateY(-2px)' : 'none',
                 boxShadow: hoveredTool === tool ? `0 8px 24px ${cat.color}20` : 'none',

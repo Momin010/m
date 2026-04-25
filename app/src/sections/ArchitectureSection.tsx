@@ -140,34 +140,32 @@ export default function ArchitectureSection() {
     const section = sectionRef.current;
     if (!section) return;
 
-    const heading = section.querySelector('.arch-heading');
-    if (heading) {
-      gsap.fromTo(heading,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1, y: 0, duration: 1.1, ease: 'power3.out',
-          scrollTrigger: { trigger: heading, start: 'top 80%' },
-        }
-      );
-    }
+    const ctx = gsap.context(() => {
+      const heading = section.querySelector('.arch-heading');
+      if (heading) {
+        gsap.fromTo(heading,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1, y: 0, duration: 1.1, ease: 'power3.out',
+            scrollTrigger: { trigger: heading, start: 'top 80%' },
+          }
+        );
+      }
 
-    const layerEls = section.querySelectorAll('.arch-layer');
-    layerEls.forEach((el, i) => {
-      gsap.fromTo(el,
-        { opacity: 0, x: -40 },
-        {
-          opacity: 1, x: 0, duration: 0.8, ease: 'power3.out',
-          delay: i * 0.1,
-          scrollTrigger: { trigger: el, start: 'top 85%' },
-        }
-      );
-    });
-
-    return () => {
-      ScrollTrigger.getAll().forEach((t) => {
-        if (t.vars.trigger && section.contains(t.vars.trigger as Element)) t.kill();
+      const layerEls = section.querySelectorAll('.arch-layer');
+      layerEls.forEach((el, i) => {
+        gsap.fromTo(el,
+          { opacity: 0, x: -40 },
+          {
+            opacity: 1, x: 0, duration: 0.8, ease: 'power3.out',
+            delay: i * 0.1,
+            scrollTrigger: { trigger: el, start: 'top 85%' },
+          }
+        );
       });
-    };
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, []);
 
   const active = layers.find((l) => l.id === activeLayer);
